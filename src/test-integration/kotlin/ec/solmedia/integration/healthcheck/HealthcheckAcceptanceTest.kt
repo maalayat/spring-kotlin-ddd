@@ -19,7 +19,6 @@ class HealthcheckAcceptanceTest {
 
     @Test
     fun `should successfully access healthcheck`() {
-
         mockMvc.perform(MockMvcRequestBuilders.get("/health-check"))
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect {

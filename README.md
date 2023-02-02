@@ -14,10 +14,7 @@ Run all the checks: `./gradlew check`. This will do some checks that you can per
 
 - [Klint](https://ktlint.github.io/) using [Spotless](https://github.com/diffplug/spotless): `./gradlew spotlessCheck`. 
 - Fix style issues automatically: `./gradlew spotlessApply`.
-- [Kotlin test](https://kotlinlang.org/api/latest/kotlin.test/): `./gradlew test`.
-
-## Run
-To just run the project execute: `./gradlew run`
+- [Kotlin test](https://kotlinlang.org/api/latest/kotlin.test/): `./gradlew integrationTest`.
 
 ## Resources
 
