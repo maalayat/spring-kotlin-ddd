@@ -41,6 +41,8 @@ val integrationTest = task<Test>("integrationTest") {
 }
 
 dependencies {
+    implementation(project(":contexts:course"))
+
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
