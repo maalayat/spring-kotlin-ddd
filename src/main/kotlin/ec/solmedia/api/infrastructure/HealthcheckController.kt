@@ -1,4 +1,4 @@
-package com.codely.api.infrastructure
+package ec.solmedia.api.infrastructure
 
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ResponseBody
