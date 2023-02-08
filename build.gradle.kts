@@ -1,12 +1,12 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+    kotlin("jvm") version "1.7.22"
+    id("com.diffplug.spotless") version "6.14.1"
     id("org.springframework.boot") version "3.0.2"
     id("io.spring.dependency-management") version "1.1.0"
-    kotlin("jvm") version "1.7.22"
     kotlin("plugin.spring") version "1.7.22"
-    id("com.diffplug.spotless") version "6.14.0"
-    id("idea")
+    id("org.flywaydb.flyway") version "9.14.1"
     application
 }
 
@@ -51,11 +51,16 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
     // Spotless
-    implementation("com.diffplug.spotless:spotless-plugin-gradle:6.14.0")
+    implementation("com.diffplug.spotless:spotless-plugin-gradle:6.14.1")
+
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.flywaydb:flyway-core:9.14.1")
+    implementation("com.h2database:h2")
+    implementation("org.postgresql:postgresql:42.5.3")
 
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("io.mockk:mockk:1.12.5")
+    testImplementation("io.mockk:mockk:1.13.4")
 }
 
 tasks.withType<KotlinCompile> {
@@ -86,4 +91,13 @@ spotless {
 tasks.check {
     dependsOn(integrationTest)
     dependsOn(tasks.spotlessCheck)
+}
+
+flyway {
+    val host = System.getenv("POSTGRESQL_URL") ?: "localhost"
+    val port = "5432"
+
+    url = "jdbc:postgresql://$host:$port/course_database"
+    user = System.getenv("POSTGRESQL_USERNAME") ?: "course_username"
+    password = System.getenv("POSTGRESQL_PASSWORD") ?: "course_password"
 }

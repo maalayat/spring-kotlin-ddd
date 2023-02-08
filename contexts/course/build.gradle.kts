@@ -14,11 +14,13 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
     // Spotless
-    implementation("com.diffplug.spotless:spotless-plugin-gradle:6.9.0")
+    implementation("com.diffplug.spotless:spotless-plugin-gradle:6.14.1")
+
+    implementation("org.springframework:spring-jdbc:6.0.4")
 
     testImplementation("org.jetbrains.kotlin:kotlin-test")
-    testImplementation("io.mockk:mockk:1.12.5")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
+    testImplementation("io.mockk:mockk:1.13.4")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
 }
 
 tasks.withType<Test> {
