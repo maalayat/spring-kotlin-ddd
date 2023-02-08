@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: "jdbc:postgresql://${POSTGRESQL_URL:localhost}:${POSTGRESQL_PORT:5432}/petscare"
+    username: petscare
+    password: ${POSTGRESQL_PASSWORD:petscare}
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
