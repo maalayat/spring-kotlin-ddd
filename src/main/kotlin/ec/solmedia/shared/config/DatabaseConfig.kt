@@ -1,4 +1,4 @@
-package ec.solmedia.config
+package ec.solmedia.shared.config
 
 import ec.solmedia.course.infrastructure.persistence.PostgreSQLCourseRepository
 import org.springframework.context.annotation.Bean

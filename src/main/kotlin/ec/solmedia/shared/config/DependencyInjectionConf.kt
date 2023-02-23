@@ -1,4 +1,4 @@
-package ec.solmedia.config
+package ec.solmedia.shared.config
 
 import ec.solmedia.course.application.CourseCreator
 import ec.solmedia.course.domain.CourseRepository
