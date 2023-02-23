@@ -1,6 +1,5 @@
 package ec.solmedia.course.infrastructure.persistence
 
-
 import ec.solmedia.course.domain.Course
 import ec.solmedia.course.domain.CourseRepository
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
@@ -16,7 +15,7 @@ class PostgreSQLCourseRepository(private val jdbcTemplate: NamedParameterJdbcTem
             .let { params ->
                 jdbcTemplate.update(
                     "INSERT INTO course (id, name, created_at) VALUES (:id,:name,:createdAt)",
-                    params
+                    params,
                 )
             }
     }

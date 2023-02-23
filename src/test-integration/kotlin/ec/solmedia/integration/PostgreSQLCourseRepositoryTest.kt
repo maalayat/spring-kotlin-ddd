@@ -18,7 +18,6 @@ class PostgreSQLCourseRepositoryTest : BaseIntegrationTest() {
     @Autowired
     private lateinit var jdbcTemplate: JdbcTemplate
 
-
     @Test
     fun `should save a course`() {
         val courseId = "13590efb-c181-4c5f-9f95-b768abde13e2"
@@ -29,7 +28,7 @@ class PostgreSQLCourseRepositoryTest : BaseIntegrationTest() {
         val courseFromDb = jdbcTemplate.queryForObject(
             "select * from course where id=?",
             mapRow(),
-            courseId
+            courseId,
         )
 
         assertEquals(courseToSave, courseFromDb)

@@ -3,10 +3,10 @@ package ec.solmedia.course.application
 import ec.solmedia.course.domain.CourseRepository
 import ec.solmedia.course.domain.InvalidCourseId
 import ec.solmedia.course.domain.InvalidCourseName
-import io.mockk.*
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
+import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
