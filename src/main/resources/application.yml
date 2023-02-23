@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: "jdbc:postgresql://${POSTGRESQL_URL:localhost}:${POSTGRESQL_PORT:5432}/petscare"
-    username: petscare
-    password: ${POSTGRESQL_PASSWORD:petscare}
+    url: "jdbc:postgresql://${POSTGRESQL_URL:localhost}:${POSTGRESQL_PORT:5432}/course_database"
+    username: course_username
+    password: ${POSTGRESQL_PASSWORD:course_password}
   jpa:
     properties:
       hibernate:
