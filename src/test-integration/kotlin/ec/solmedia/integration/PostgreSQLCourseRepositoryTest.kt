@@ -2,6 +2,7 @@ package ec.solmedia.integration
 
 import ec.solmedia.course.domain.Course
 import ec.solmedia.course.infrastructure.persistence.PostgreSQLCourseRepository
+import ec.solmedia.shared.BaseIntegrationTest
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
