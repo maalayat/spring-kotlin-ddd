@@ -60,10 +60,15 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.mockk:mockk:1.13.4")
 
+    // Test containers
     testIntegrationImplementation("org.testcontainers:testcontainers:1.17.6")
     testIntegrationImplementation("org.testcontainers:jdbc:1.17.6")
     testIntegrationImplementation("org.testcontainers:junit-jupiter:1.17.6")
     testIntegrationImplementation("org.testcontainers:postgresql:1.17.6")
+
+    // Rest Assured
+    testIntegrationImplementation("io.rest-assured:rest-assured:5.3.0")
+    testIntegrationImplementation("io.rest-assured:kotlin-extensions:5.3.0")
 }
 
 tasks.withType<KotlinCompile> {
