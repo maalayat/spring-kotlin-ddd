@@ -1,12 +1,10 @@
-package ec.solmedia.shared
+package ec.solmedia.course.infrastructure.shared
 
-import io.restassured.RestAssured
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.BeforeEach
+import ec.solmedia.shared.Application
+import jakarta.annotation.PostConstruct
+import jakarta.annotation.PreDestroy
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import org.testcontainers.containers.DockerComposeContainer
@@ -14,15 +12,12 @@ import org.testcontainers.containers.wait.strategy.Wait
 import org.testcontainers.junit.jupiter.Testcontainers
 import java.io.File
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Testcontainers
 @ContextConfiguration(classes = [Application::class])
-class BaseRestAssuredTest {
-
-    @LocalServerPort
-    private val springbootPort: Int = 0
+class BaseAcceptanceTest {
 
     companion object {
         private const val POSTGRESQL_PORT = 5432
@@ -31,22 +26,15 @@ class BaseRestAssuredTest {
                 .withOptions("--compatibility")
                 .withExposedService("db", POSTGRESQL_PORT, Wait.forListeningPort())
                 .withLocalCompose(true)
-
-        @JvmStatic
-        @BeforeAll
-        fun start() {
-            environment.start()
-        }
-
-        @JvmStatic
-        @AfterAll
-        fun stop() {
-            environment.stop()
-        }
     }
 
-    @BeforeEach
-    fun setUp() {
-        RestAssured.port = springbootPort
+    @PostConstruct
+    fun start() {
+        environment.start()
+    }
+
+    @PreDestroy
+    fun stop() {
+        environment.stop()
     }
 }

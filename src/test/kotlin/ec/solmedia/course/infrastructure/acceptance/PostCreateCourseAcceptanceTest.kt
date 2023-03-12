@@ -1,6 +1,6 @@
-package ec.solmedia.acceptance
+package ec.solmedia.course.infrastructure.acceptance
 
-import ec.solmedia.shared.BaseAcceptanceTest
+import ec.solmedia.course.infrastructure.shared.BaseAcceptanceTest
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType

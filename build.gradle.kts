@@ -18,28 +18,6 @@ repositories {
     mavenCentral()
 }
 
-sourceSets {
-    create("test-integration") {
-        compileClasspath += sourceSets.main.get().output
-        runtimeClasspath += sourceSets.main.get().output
-    }
-}
-
-val testIntegrationImplementation: Configuration by configurations.getting {
-    extendsFrom(configurations.testImplementation.get())
-}
-
-configurations["testIntegrationRuntimeOnly"].extendsFrom(configurations.testRuntimeOnly.get())
-
-val integrationTest = task<Test>("integrationTest") {
-    description = "Runs integration tests."
-    group = "verification"
-    testClassesDirs = sourceSets["test-integration"].output.classesDirs
-    classpath = sourceSets["test-integration"].runtimeClasspath
-    useJUnitPlatform()
-    shouldRunAfter("test")
-}
-
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -61,14 +39,17 @@ dependencies {
     testImplementation("io.mockk:mockk:1.13.4")
 
     // Test containers
-    testIntegrationImplementation("org.testcontainers:testcontainers:1.17.6")
-    testIntegrationImplementation("org.testcontainers:jdbc:1.17.6")
-    testIntegrationImplementation("org.testcontainers:junit-jupiter:1.17.6")
-    testIntegrationImplementation("org.testcontainers:postgresql:1.17.6")
+    testImplementation("org.testcontainers:testcontainers:1.17.6")
+    testImplementation("org.testcontainers:jdbc:1.17.6")
+    testImplementation("org.testcontainers:junit-jupiter:1.17.6")
+    testImplementation("org.testcontainers:postgresql:1.17.6")
 
     // Rest Assured
-    testIntegrationImplementation("io.rest-assured:rest-assured:5.3.0")
-    testIntegrationImplementation("io.rest-assured:kotlin-extensions:5.3.0")
+    testImplementation("io.rest-assured:rest-assured:5.3.0")
+    testImplementation("io.rest-assured:kotlin-extensions:5.3.0")
+
+    // Datafaker
+    testImplementation("net.datafaker:datafaker:1.8.0")
 }
 
 tasks.withType<KotlinCompile> {
@@ -97,7 +78,6 @@ spotless {
 }
 
 tasks.check {
-    dependsOn(integrationTest)
     dependsOn(tasks.spotlessCheck)
 }
 

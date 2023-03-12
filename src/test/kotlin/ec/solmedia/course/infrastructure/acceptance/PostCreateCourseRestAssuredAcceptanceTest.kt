@@ -1,6 +1,6 @@
-package ec.solmedia.acceptance
+package ec.solmedia.course.infrastructure.acceptance
 
-import ec.solmedia.shared.BaseRestAssuredTest
+import ec.solmedia.course.infrastructure.shared.BaseRestAssuredTest
 import io.restassured.http.ContentType
 import io.restassured.module.kotlin.extensions.Given
 import io.restassured.module.kotlin.extensions.Then

@@ -1,5 +1,6 @@
-package ec.solmedia.shared
+package ec.solmedia.course.infrastructure.shared
 
+import ec.solmedia.shared.Application
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
