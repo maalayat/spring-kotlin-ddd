@@ -1,8 +1,10 @@
 package ec.solmedia.course.infrastructure.shared
 
 import ec.solmedia.shared.Application
+import io.mockk.unmockkAll
 import io.restassured.RestAssured
 import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -49,5 +51,10 @@ class BaseRestAssuredTest {
     @BeforeEach
     fun setUp() {
         RestAssured.port = springbootPort
+    }
+
+    @AfterEach
+    fun tearDown() {
+        unmockkAll()
     }
 }
