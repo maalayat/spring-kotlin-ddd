@@ -5,6 +5,9 @@ Domain-Driven Design course accompaniment project
 - Spring Boot
 - Gradle
 - Kotlin
+- [Test Containers](https://www.testcontainers.org/)
+- [Arrow Core](https://arrow-kt.io/docs/core/)
+- [REST-assured](https://rest-assured.io/)
 
 ## Build
 Build the project for the first time: `./gradlew build`

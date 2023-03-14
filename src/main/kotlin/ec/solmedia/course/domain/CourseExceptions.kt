@@ -1,9 +1,7 @@
 package ec.solmedia.course.domain
 
-sealed class CourseExceptions(message: String) : RuntimeException(message)
+sealed class CourseApplicationError
 
-data class InvalidCourseId(val id: String) :
-    CourseExceptions("The id <$id> is not a valid course id")
-
-data class InvalidCourseName(val name: String) :
-    CourseExceptions("The name <$name> is not a valida course name")
+sealed class InvalidCourse : CourseApplicationError()
+data class InvalidCourseId(val id: String, val cause: Throwable?) : InvalidCourse()
+data class InvalidCourseName(val name: String, val cause: Throwable?) : InvalidCourse()

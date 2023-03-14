@@ -45,7 +45,7 @@ class GetFindCourseControllerRestAssuredAcceptanceTest : BaseAcceptanceTest() {
     }
 
     private fun `an existing course`() {
-        courseRepository.saveCourse(CourseMother.random())
+        courseRepository.saveCourse(course)
     }
 
     companion object {

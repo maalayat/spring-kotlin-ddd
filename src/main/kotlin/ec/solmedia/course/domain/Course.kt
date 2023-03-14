@@ -1,15 +1,18 @@
 package ec.solmedia.course.domain
 
+import arrow.core.raise.Raise
+import arrow.core.raise.ensure
 import java.time.LocalDateTime
 import java.util.*
 
 data class CourseId private constructor(val value: UUID) {
 
     companion object {
-        fun of(id: String) = try {
+        context(Raise<InvalidCourseId>)
+        fun of(id: String): CourseId = try {
             CourseId(UUID.fromString(id))
-        } catch (exception: Exception) {
-            throw InvalidCourseId(id)
+        } catch (exception: IllegalArgumentException) {
+            raise(InvalidCourseId(id, exception))
         }
     }
 }
@@ -17,10 +20,13 @@ data class CourseId private constructor(val value: UUID) {
 data class CourseName private constructor(val value: String) {
 
     companion object {
-        fun of(name: String) = if (name.isEmpty() || name.isBlank()) {
-            throw InvalidCourseName(name)
-        } else {
-            CourseName(name)
+        context(Raise<InvalidCourseName>)
+        fun of(name: String): CourseName {
+            ensure(name.isNotEmpty() && name.isNotBlank()) {
+                InvalidCourseName(name, null)
+            }
+
+            return CourseName(name)
         }
     }
 }
@@ -32,6 +38,7 @@ data class Course private constructor(
 ) {
 
     companion object {
+        context(Raise<InvalidCourse>)
         fun of(id: String, name: String, createdAt: LocalDateTime) =
             Course(CourseId.of(id), CourseName.of(name), createdAt)
     }

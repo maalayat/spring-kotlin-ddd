@@ -16,6 +16,7 @@ java.sourceCompatibility = JavaVersion.VERSION_17
 
 repositories {
     mavenCentral()
+    maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
 }
 
 dependencies {
@@ -33,6 +34,9 @@ dependencies {
     implementation("org.flywaydb:flyway-core:9.14.1")
     implementation("com.h2database:h2")
     implementation("org.postgresql:postgresql:42.5.3")
+
+    // Arrow
+    implementation("io.arrow-kt:arrow-core:2.0.0-SNAPSHOT")
 
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -54,7 +58,7 @@ dependencies {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
-        freeCompilerArgs = listOf("-Xjsr305=strict")
+        freeCompilerArgs = listOf("-Xjsr305=strict", "-Xcontext-receivers")
         jvmTarget = "17"
     }
 }

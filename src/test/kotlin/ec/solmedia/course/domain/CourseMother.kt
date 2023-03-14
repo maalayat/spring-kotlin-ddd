@@ -1,5 +1,7 @@
 package ec.solmedia.course.domain
 
+import arrow.core.identity
+import arrow.core.raise.either
 import ec.solmedia.shared.UuidMother
 import ec.solmedia.shared.WordMother
 import java.time.LocalDateTime
@@ -9,5 +11,16 @@ object DateMother {
 }
 
 object CourseMother {
-    fun random(): Course = Course.of(UuidMother.random(), WordMother.random(), DateMother.fixed())
+
+    fun random(
+        id: String = UuidMother.random(),
+        name: String = WordMother.random(),
+        date: LocalDateTime = DateMother.fixed(),
+    ): Course = either {
+        Course.of(
+            id,
+            name,
+            date,
+        )
+    }.fold({ throw RuntimeException() }, ::identity)
 }
