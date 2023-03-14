@@ -11,11 +11,24 @@ import io.restassured.module.kotlin.extensions.When
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
+import org.springframework.test.context.jdbc.Sql
 
 class GetFindCourseControllerRestAssuredAcceptanceTest : BaseAcceptanceTest() {
 
     @Autowired
     private lateinit var courseRepository: PostgreSQLCourseRepository
+
+    @Test
+    @Sql("classpath:db/fixtures/find/add-course-data.sql")
+    fun `should find course successfully with fixture`() {
+        When {
+            get("/course/${course.id}")
+        } Then {
+            statusCode(HttpStatus.OK.value())
+        } Extract {
+            body().asString().compareTo(existingCourseResponse)
+        }
+    }
 
     @Test
     fun `should find course successfully with course creation`() {
