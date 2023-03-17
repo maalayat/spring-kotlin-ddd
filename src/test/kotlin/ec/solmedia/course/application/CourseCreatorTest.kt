@@ -1,6 +1,8 @@
 package ec.solmedia.course.application
 
 import arrow.core.raise.either
+import ec.solmedia.course.domain.CourNameMother
+import ec.solmedia.course.domain.CourseIdMother
 import ec.solmedia.course.domain.CourseRepository
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -19,25 +21,20 @@ class CourseCreatorTest {
     @InjectMockKs
     private lateinit var courseCreator: CourseCreator
 
-    companion object {
-        private const val id = "caebae03-3ee9-4aef-b041-21a400fa1bb7"
-        private const val name = "Kotlin Hexagonal Architecture Api Course"
-    }
-
     @Test
     fun `should create a course successfully`() {
-        either { courseCreator.create(id, name) }
+        either { courseCreator.create(CourseIdMother.id, CourNameMother.name) }
 
         verify(exactly = 1) { repository.saveCourse(any()) }
     }
 
     @Test
     fun `should not create a course with invalid id`() {
-        assertTrue { either { courseCreator.create("Invalid", name) }.isLeft() }
+        assertTrue { either { courseCreator.create("Invalid", CourNameMother.name) }.isLeft() }
     }
 
     @Test
     fun `should not create a course with invalid nane`() {
-        assertTrue { either { courseCreator.create(id, "   ") }.isLeft() }
+        assertTrue { either { courseCreator.create(CourseIdMother.id, "   ") }.isLeft() }
     }
 }

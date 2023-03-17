@@ -2,7 +2,6 @@ package ec.solmedia.course.application
 
 import arrow.core.Either
 import arrow.core.raise.either
-import ec.solmedia.course.domain.COURSE_ID
 import ec.solmedia.course.domain.CourNameMother
 import ec.solmedia.course.domain.CourseApplicationError
 import ec.solmedia.course.domain.CourseIdMother
@@ -47,7 +46,7 @@ class CourseFinderTest {
     }
 
     private fun `when the finder is executed`(): Either<CourseApplicationError, CourseResponse> {
-        return either { courseFinder.find(COURSE_ID) }
+        return either { courseFinder.find(CourseIdMother.id) }
     }
 
     private fun `then the found course is equals to expected`(actualCourse: Either<CourseApplicationError, CourseResponse>) {
@@ -62,11 +61,11 @@ class CourseFinderTest {
     }
 
     private fun `when the finder is executed with nonexistent course Id`(): Either<CourseApplicationError, CourseResponse> {
-        return either { courseFinder.find(uuid) }
+        return either { courseFinder.find(otherUuid) }
     }
 
     companion object {
-        private const val uuid = "26ee3399-26b3-4f16-91a5-cb62951de5e2"
-        private val nonexistentCourseId = CourseIdMother(uuid)
+        private const val otherUuid = "26ee3399-26b3-4f16-91a5-cb62951de5e2"
+        private val nonexistentCourseId = CourseIdMother(otherUuid)
     }
 }

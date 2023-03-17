@@ -8,15 +8,14 @@ import ec.solmedia.shared.UuidMother
 import ec.solmedia.shared.WordMother
 import java.time.LocalDateTime
 
-const val COURSE_ID = "7ab75530-5da7-4b4a-b083-a779dd6c759e"
-private const val COURSE_NAME = "Course Finder Test Name"
-
 object CourseIdMother {
-    operator fun invoke(uuid: String = COURSE_ID): CourseId = either { CourseId(uuid) }.foldRight()
+    const val id = "7ab75530-5da7-4b4a-b083-a779dd6c759e"
+    operator fun invoke(uuid: String = id): CourseId = either { CourseId(uuid) }.foldRight()
 }
 
 object CourNameMother {
-    operator fun invoke(): CourseName = either { CourseName(COURSE_NAME) }.foldRight()
+    const val name = "Kotlin Hexagonal Architecture Api Course"
+    operator fun invoke(): CourseName = either { CourseName(name) }.foldRight()
 }
 
 object DateMother {
