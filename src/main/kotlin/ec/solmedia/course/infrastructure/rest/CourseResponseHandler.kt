@@ -5,6 +5,7 @@ import arrow.core.raise.Raise
 import arrow.core.raise.eagerEffect
 import arrow.core.raise.fold
 import ec.solmedia.course.domain.CourseApplicationError
+import ec.solmedia.course.domain.CourseNotFound
 import ec.solmedia.course.domain.InvalidCourseId
 import ec.solmedia.course.domain.InvalidCourseName
 import org.springframework.http.HttpStatus
@@ -17,6 +18,7 @@ private fun <T> handleCourseError(error: CourseApplicationError): ResponseEntity
     when (error) {
         is InvalidCourseId -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
         is InvalidCourseName -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
+        is CourseNotFound -> ResponseEntity.status(HttpStatus.NOT_FOUND).build()
     }
 
 private fun <T> handleThrowable(throwable: Throwable): ResponseEntity<T> =
