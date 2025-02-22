@@ -1,18 +1,24 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
-    kotlin("jvm") version "1.7.22"
+    kotlin("jvm") version "1.9.25"
+    kotlin("plugin.spring") version "1.9.25"
+    id("org.springframework.boot") version "3.4.3"
+    id("io.spring.dependency-management") version "1.1.7"
+
+    kotlin("plugin.jpa") version "1.9.25"
+
     id("com.diffplug.spotless") version "6.14.1"
-    id("org.springframework.boot") version "3.0.2"
-    id("io.spring.dependency-management") version "1.1.0"
-    kotlin("plugin.spring") version "1.7.22"
     id("org.flywaydb.flyway") version "9.14.1"
     application
 }
 
 group = "ec.solmedia"
 version = "0.0.1"
-java.sourceCompatibility = JavaVersion.VERSION_17
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
 
 repositories {
     mavenCentral()
@@ -20,33 +26,36 @@ repositories {
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
 
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     // Spotless
     implementation("com.diffplug.spotless:spotless-plugin-gradle:6.14.1")
 
+    // Flyway
+    implementation("org.flywaydb:flyway-core")
+    implementation("org.flywaydb:flyway-database-postgresql")
+
+    // Database
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.flywaydb:flyway-core:9.14.1")
-    implementation("com.h2database:h2")
-    implementation("org.postgresql:postgresql:42.5.3")
+    runtimeOnly("com.h2database:h2")
+    runtimeOnly("org.postgresql:postgresql")
 
     // Arrow
-    implementation("io.arrow-kt:arrow-core:2.0.0-SNAPSHOT")
+    implementation("io.arrow-kt:arrow-core:1.2.0")
 
-    testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+    testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("io.mockk:mockk:1.13.4")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     // Test containers
-    testImplementation("org.testcontainers:testcontainers:1.17.6")
-    testImplementation("org.testcontainers:jdbc:1.17.6")
-    testImplementation("org.testcontainers:junit-jupiter:1.17.6")
-    testImplementation("org.testcontainers:postgresql:1.17.6")
+    testImplementation("org.springframework.boot:spring-boot-testcontainers")
+    testImplementation("org.testcontainers:postgresql")
 
     // Rest Assured
     testImplementation("io.rest-assured:rest-assured:5.3.0")
@@ -56,11 +65,16 @@ dependencies {
     testImplementation("net.datafaker:datafaker:1.8.0")
 }
 
-tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs = listOf("-Xjsr305=strict", "-Xcontext-receivers")
-        jvmTarget = "17"
+kotlin {
+    compilerOptions {
+        freeCompilerArgs.addAll("-Xjsr305=strict", "-Xcontext-receivers")
     }
+}
+
+allOpen {
+    annotation("jakarta.persistence.Entity")
+    annotation("jakarta.persistence.MappedSuperclass")
+    annotation("jakarta.persistence.Embeddable")
 }
 
 tasks.withType<Test> {
