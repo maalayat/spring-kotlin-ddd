@@ -31,20 +31,24 @@ class BaseRestAssuredTest {
         private const val POSTGRESQL_PORT = 5432
         val environment: DockerComposeContainer<*> =
             DockerComposeContainer(File("docker-compose-test.yml"))
-                .withOptions("--compatibility")
                 .withExposedService("db", POSTGRESQL_PORT, Wait.forListeningPort())
                 .withLocalCompose(true)
+                .withLogConsumer("db") { print(it.utf8String) }
 
         @JvmStatic
         @BeforeAll
         fun start() {
+            println("Starting Docker Compose...")
             environment.start()
+            println("Docker Compose started successfully.")
         }
 
         @JvmStatic
         @AfterAll
         fun stop() {
+            println("Stopping Docker Compose...")
             environment.stop()
+            println("Docker Compose stopped successfully.")
         }
     }
 
