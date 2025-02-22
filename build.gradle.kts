@@ -3,9 +3,7 @@ plugins {
     kotlin("plugin.spring") version "1.9.25"
     id("org.springframework.boot") version "3.4.3"
     id("io.spring.dependency-management") version "1.1.7"
-
     kotlin("plugin.jpa") version "1.9.25"
-
     id("com.diffplug.spotless") version "6.14.1"
     id("org.flywaydb.flyway") version "9.14.1"
     application
@@ -47,14 +45,15 @@ dependencies {
     // Arrow
     implementation("io.arrow-kt:arrow-core:1.2.0")
 
+    // testing
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-    testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("io.mockk:mockk:1.13.4")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     // Test containers
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
+    testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:postgresql")
 
     // Rest Assured
