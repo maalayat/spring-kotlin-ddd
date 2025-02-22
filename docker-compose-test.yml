@@ -1,6 +1,6 @@
 services:
   db:
-    image: postgres
+    image: postgres:latest
     restart: always
     environment:
       POSTGRES_USER: course_username
@@ -8,5 +8,3 @@ services:
       POSTGRES_DB: course_database
     ports:
       - "5432:5432"
-    expose:
-      - 5432
