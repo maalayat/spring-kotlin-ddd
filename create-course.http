@@ -1,3 +1,8 @@
+### Health check
+GET http://localhost:8080/actuator/health
+Accept: application/vnd.spring-boot.actuator.v3+json
+
+
 ### Create course
 POST http://localhost:8080/course
 Content-Type: application/json
@@ -7,5 +12,5 @@ Content-Type: application/json
   "name": "Test 1"
 }
 
-###
-
+### Get course by ID
+GET http://localhost:8080/course/97fa5af4-bd81-45d5-974f-d5a3970af252
