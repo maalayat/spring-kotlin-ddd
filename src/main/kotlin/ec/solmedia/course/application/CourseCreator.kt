@@ -13,7 +13,7 @@ class CourseCreator(private val repository: CourseRepository) {
     context(Raise<InvalidCourse>)
     fun create(id: String, name: String) {
         Course(CourseId(id), CourseName(name), LocalDateTime.now()).let {
-            repository.saveCourse(it)
+            repository.save(it)
         }
     }
 }

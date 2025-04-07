@@ -22,7 +22,7 @@ class PostgreSQLCourseRepositoryTest : BaseIntegrationTest() {
         val courseId = "13590efb-c181-4c5f-9f95-b768abde13e2"
         val courseToSave = CourseMother.random(id = courseId)
 
-        repository.saveCourse(courseToSave)
+        repository.save(courseToSave)
         val courseFromDb = either { repository.find(CourseId(courseId)) }
 
         assertEquals(Either.Right(courseToSave), courseFromDb)

@@ -16,7 +16,7 @@ import java.sql.ResultSet
 
 class PostgreSQLCourseRepository(private val jdbcTemplate: NamedParameterJdbcTemplate) : CourseRepository {
 
-    override fun saveCourse(course: Course) {
+    override fun save(course: Course) {
         MapSqlParameterSource()
             .addValue("id", course.id.value)
             .addValue("name", course.name.value)

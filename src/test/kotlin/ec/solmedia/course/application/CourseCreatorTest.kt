@@ -25,7 +25,7 @@ class CourseCreatorTest {
     fun `should create a course successfully`() {
         either { courseCreator.create(CourseIdMother.id, CourNameMother.name) }
 
-        verify(exactly = 1) { repository.saveCourse(any()) }
+        verify(exactly = 1) { repository.save(any()) }
     }
 
     @Test
