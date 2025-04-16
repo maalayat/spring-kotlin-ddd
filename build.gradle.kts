@@ -43,7 +43,7 @@ dependencies {
     runtimeOnly("org.postgresql:postgresql")
 
     // Arrow
-    implementation("io.arrow-kt:arrow-core:1.2.0")
+    implementation("io.arrow-kt:arrow-core:2.0.1")
 
     // testing
     testImplementation("org.springframework.boot:spring-boot-starter-test")
