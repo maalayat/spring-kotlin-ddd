@@ -6,7 +6,7 @@ import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 
 @Service
-class SpringApplicationEventBus(val publisher: ApplicationEventPublisher) : EventBus {
+class SpringApplicationEventBus(private val publisher: ApplicationEventPublisher) : EventBus {
     override fun publish(events: List<DomainEvent>) {
         events.forEach(publisher::publishEvent)
     }

@@ -1,28 +1,19 @@
 package ec.solmedia.course_counter.domain
 
-import arrow.core.raise.Raise
 import ec.solmedia.course.domain.CourseId
-import ec.solmedia.course.domain.InvalidCourseId
+import ec.solmedia.shared.domain.AggregateRoot
 import ec.solmedia.shared.domain.Identifier
 import ec.solmedia.shared.domain.IntValueObject
+import java.util.*
 
-data class CoursesCounterId private constructor(val value: String) : Identifier(value) {
+data class CoursesCounterId(val value: String) : Identifier(value) {
     companion object {
-        context(Raise<InvalidCourseId>)
-        operator fun invoke(value: String): CoursesCounterId = try {
-            CoursesCounterId(value)
-        } catch (exception: IllegalArgumentException) {
-            raise(InvalidCourseId(value, exception))
-        }
+        fun random() = CoursesCounterId(UUID.randomUUID().toString())
     }
 }
 
-data class CoursesCounterTotal private constructor(val value: Int) : IntValueObject(value) {
+data class CoursesCounterTotal(val value: Int) : IntValueObject(value) {
     companion object {
-        operator fun invoke(value: Int): CoursesCounterTotal {
-            return CoursesCounterTotal(value)
-        }
-
         fun initialize(): CoursesCounterTotal {
             return CoursesCounterTotal(1)
         }
@@ -33,20 +24,17 @@ data class CoursesCounterTotal private constructor(val value: Int) : IntValueObj
     }
 }
 
-
 data class CoursesCounter(
     val id: CoursesCounterId,
     var total: CoursesCounterTotal,
-    val existingCourses: MutableList<CourseId>,
-) {
+    val existingCourses: MutableList<CourseId> = mutableListOf(),
+) : AggregateRoot() {
 
     companion object {
-        context(Raise<InvalidCourseId>)
-        fun initialize(id: String): CoursesCounter {
+        fun initialize(coursesCounterId: CoursesCounterId): CoursesCounter {
             return CoursesCounter(
-                CoursesCounterId(id),
+                coursesCounterId,
                 CoursesCounterTotal.initialize(),
-                mutableListOf()
             )
         }
     }

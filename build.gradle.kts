@@ -40,10 +40,10 @@ dependencies {
     // Database
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     runtimeOnly("com.h2database:h2")
-    runtimeOnly("org.postgresql:postgresql")
+    implementation("org.postgresql:postgresql")
 
     // Arrow
-    implementation("io.arrow-kt:arrow-core:2.0.1")
+    implementation("io.arrow-kt:arrow-core:1.2.0")
 
     // testing
     testImplementation("org.springframework.boot:spring-boot-starter-test")
