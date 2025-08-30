@@ -4,6 +4,7 @@ import arrow.core.raise.either
 import ec.solmedia.course.domain.CourNameMother
 import ec.solmedia.course.domain.CourseIdMother
 import ec.solmedia.course.domain.CourseRepository
+import ec.solmedia.shared.domain.EventBus
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
@@ -18,6 +19,9 @@ class CourseCreatorTest {
     @MockK(relaxUnitFun = true)
     private lateinit var repository: CourseRepository
 
+    @MockK(relaxUnitFun = true)
+    private lateinit var eventBus: EventBus
+
     @InjectMockKs
     private lateinit var courseCreator: CourseCreator
 
@@ -25,7 +29,10 @@ class CourseCreatorTest {
     fun `should create a course successfully`() {
         either { courseCreator.create(CourseIdMother.id, CourNameMother.name) }
 
-        verify(exactly = 1) { repository.save(any()) }
+        verify(exactly = 1) {
+            repository.save(any())
+            eventBus.publish(any())
+        }
     }
 
     @Test

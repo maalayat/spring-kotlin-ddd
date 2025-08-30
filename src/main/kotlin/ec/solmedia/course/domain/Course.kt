@@ -2,6 +2,7 @@ package ec.solmedia.course.domain
 
 import arrow.core.raise.Raise
 import arrow.core.raise.ensure
+import ec.solmedia.shared.domain.DomainEvent
 import java.time.LocalDateTime
 import java.util.*
 
@@ -35,4 +36,23 @@ data class Course(
     val id: CourseId,
     val name: CourseName,
     val createdAt: LocalDateTime,
-)
+    val domainEvents: MutableList<DomainEvent> = mutableListOf(),
+) {
+    companion object {
+        operator fun invoke(id: CourseId, name: CourseName, createdAt: LocalDateTime = LocalDateTime.now()): Course {
+            return Course(
+                id,
+                name,
+                createdAt,
+                mutableListOf(CourseCreatedDomainEvent(id, name, createdAt)),
+            )
+        }
+    }
+
+    fun pullDomainEvents(): MutableList<DomainEvent> {
+        val events = domainEvents.toMutableList()
+        domainEvents.clear()
+
+        return events
+    }
+}

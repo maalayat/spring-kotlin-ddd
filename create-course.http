@@ -2,15 +2,18 @@
 GET http://localhost:8080/actuator/health
 Accept: application/vnd.spring-boot.actuator.v3+json
 
-
 ### Create course
+< {%
+const id = $random.uuid
+client.global.set("courseId", id)
+%}
 POST http://localhost:8080/course
 Content-Type: application/json
 
 {
-  "id": "97fa5af4-bd81-45d5-974f-d5a3970af252",
-  "name": "Test 1"
+  "id": "{{courseId}}",
+  "name": "{{$random.educator.course}}"
 }
 
 ### Get course by ID
-GET http://localhost:8080/course/97fa5af4-bd81-45d5-974f-d5a3970af252
+GET http://localhost:8080/course/{{courseId}}
