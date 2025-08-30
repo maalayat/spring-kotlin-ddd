@@ -5,6 +5,7 @@ build/
 !**/src/test/**/build/
 .vscode/
 bin/
+CLAUDE.md
 
 ### IntelliJ IDEA ###
 .idea
