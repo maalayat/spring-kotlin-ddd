@@ -9,6 +9,7 @@ class CourseCreatedDomainEvent(
     createdAt: LocalDateTime,
 ) : DomainEvent(
     EVENT_NAME,
+    courseId.value.toString(),
     """
     {
         "id": "${courseId.value}",

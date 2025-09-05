@@ -5,6 +5,6 @@ import arrow.core.raise.Raise
 interface CourseRepository {
     fun save(course: Course)
 
-    context(Raise<CourseNotFound>)
+    context(Raise<CourseApplicationError>)
     fun find(id: CourseId): Course
 }
