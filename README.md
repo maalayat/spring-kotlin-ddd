@@ -1,32 +1,249 @@
-# spring-kotlin-ddd ☕
+# Spring Kotlin DDD ☕
 
-Domain-Driven Design course accompaniment project
+A comprehensive **Domain-Driven Design (DDD)** project built with **Spring Boot** and **Kotlin**, demonstrating modern
+software architecture patterns and best practices for building scalable, maintainable applications.
 
-- Spring Boot
-- Gradle
-- Kotlin
-- [Test Containers](https://www.testcontainers.org/)
-- [Arrow Core](https://arrow-kt.io/docs/core/)
-- [REST-assured](https://rest-assured.io/)
+## 🏗️ Architecture Overview
 
-## Build
-Build the project for the first time: `./gradlew build`
+This project implements **Hexagonal Architecture** (Ports & Adapters) with clear separation of concerns across multiple
+bounded contexts:
 
-## Check
-Run all the checks: `./gradlew check`. This will do some checks that you can perform with isolated commands:
+### Bounded Contexts
 
-- [Klint](https://ktlint.github.io/) using [Spotless](https://github.com/diffplug/spotless): `./gradlew spotlessCheck`. 
-- Fix style issues automatically: `./gradlew spotlessApply`.
-- [Kotlin test](https://kotlinlang.org/api/latest/kotlin.test/): `./gradlew integrationTest`.
+1. **Course Context** (`ec.solmedia.course`)
+    - Manages course creation and retrieval
+    - Publishes domain events when courses are created
+    - Implements value objects for type safety (`CourseId`, `CourseName`)
 
-## Resources
+2. **CoursesCounter Context** (`ec.solmedia.coursesCounter`)
+    - Tracks the total number of courses created
+    - Listens to course creation events
+    - Maintains an aggregate counter with course history
 
-### Kotlin
+3. **Shared Kernel** (`ec.solmedia.shared`)
+    - Common domain primitives and infrastructure
+    - Event bus implementation
+    - Application configuration
 
-* [Kotlin Coding Conventions](https://kotlinlang.org/docs/coding-conventions.html)
-* [Comparison between Kotlin and Java](https://kotlinlang.org/docs/comparison-to-java.html)
+### Layer Structure
 
-### Kotlin test
+Each bounded context follows the same layered architecture:
 
-* [Test code using JUnit in JVM - tutorial](https://kotlinlang.org/docs/jvm-test-using-junit.html)
-* [JUnit5 assertions](https://junit.org/junit5/docs/5.0.1/api/org/junit/jupiter/api/Assertions.html)
+```
+├── domain/          # Business logic, entities, value objects, domain events
+├── application/     # Use cases, application services
+└── infrastructure/  # External concerns (REST, persistence, messaging)
+```
+
+## 🚀 Technology Stack
+
+- **Framework**: Spring Boot 3.4.4
+- **Language**: Kotlin 1.9.25 with Java 21
+- **Database**: PostgreSQL with Flyway migrations
+- **Functional Programming**: [Arrow-kt](https://arrow-kt.io/docs/core/) for error handling
+- **Testing**: JUnit 5, [TestContainers](https://www.testcontainers.org/), [REST-assured](https://rest-assured.io/),
+  MockK
+- **Code Quality**: [Ktlint](https://ktlint.github.io/) via [Spotless](https://github.com/diffplug/spotless)
+- **Build Tool**: Gradle with Kotlin DSL
+- **Containerization**: Docker Compose for local development
+
+## 🔧 Key Features
+
+- **Domain Events**: Event-driven communication between bounded contexts
+- **Functional Error Handling**: Using Arrow-kt's `Raise` context for type-safe error management
+- **Value Objects**: Strong typing with validation for domain concepts
+- **Repository Pattern**: Clean data access abstraction
+- **Integration Testing**: Comprehensive testing with TestContainers
+- **Database Migrations**: Flyway for schema versioning
+- **Health Checks**: Spring Actuator endpoints
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Java 21
+- Docker and Docker Compose
+- Git
+
+### Quick Start
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/maalayat/spring-kotlin-ddd
+   cd spring-kotlin-ddd
+   ```
+
+2. **Start the database (Optional. Step 4 also automatically starts Docker)**
+   ```bash
+   docker-compose up -d postgres
+   ```
+
+3. **Build the project**
+   ```bash
+   ./gradlew build
+   ```
+
+4. **Run the application**
+   ```bash
+   ./gradlew bootRun
+   ```
+
+The application will start on `http://localhost:8080`
+
+### Database Setup
+
+The project uses PostgreSQL with the following default configuration:
+
+- **Host**: localhost:5432
+- **Database**: course_database
+- **Username**: course_username
+- **Password**: course_password
+
+You can override these values using environment variables:
+
+- `POSTGRESQL_URL`
+- `POSTGRESQL_PORT`
+- `POSTGRESQL_PASSWORD`
+
+## 📡 API Endpoints
+
+### Health Check
+
+```http
+GET /actuator/health
+```
+
+### Course Management
+
+```http
+# Create a new course
+POST /course
+Content-Type: application/json
+
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "name": "Introduction to Kotlin"
+}
+
+# Get course by ID
+GET /course/{courseId}
+```
+
+## 🧪 Testing
+
+### Run All Tests
+
+```bash
+./gradlew test
+```
+
+### Code Quality Checks
+
+```bash
+# Run all quality checks
+./gradlew check
+
+# Check code formatting
+./gradlew spotlessCheck
+
+# Auto-fix formatting issues
+./gradlew spotlessApply
+```
+
+## 🏗️ Development
+
+### Project Structure
+
+```
+src/
+├── main/
+│   ├── kotlin/
+│   │   └── ec/solmedia/
+│   │       ├── course/           # Course bounded context
+│   │       ├── coursesCounter/   # Counter bounded context
+│   │       └── shared/           # Shared kernel
+│   └── resources/
+│       ├── application.yml       # Application configuration
+│       └── db/migration/         # Flyway migrations
+└── test/
+    ├── kotlin/                   # Unit and integration tests
+    └── resources/
+```
+
+### Adding New Features
+
+1. **Domain First**: Start by modeling the domain in the appropriate bounded context
+2. **Use Cases**: Implement application services for business operations
+3. **Infrastructure**: Add REST controllers, repositories, or event handlers as needed
+4. **Tests**: Write comprehensive tests at all layers
+
+### Code Style
+
+This project follows Kotlin coding conventions enforced by Ktlint:
+
+- Use meaningful names for classes, functions, and variables
+- Prefer immutable data structures
+- Leverage Kotlin's type system for domain modeling
+- Use context receivers for functional error handling
+
+## 🔍 Domain Model Examples
+
+### Course Aggregate
+
+```kotlin
+data class Course(
+    val id: CourseId,
+    val name: CourseName,
+    val createdAt: LocalDateTime,
+    val domainEvents: MutableList<DomainEvent>
+)
+```
+
+### Value Objects with Validation
+
+```kotlin
+data class CourseName private constructor(val value: String) {
+    companion object {
+        context(Raise<InvalidCourseName>)
+        operator fun invoke(name: String): CourseName {
+            ensure(name.isNotEmpty() && name.isNotBlank()) {
+                InvalidCourseName(name, null)
+            }
+            return CourseName(name)
+        }
+    }
+}
+```
+
+## 📚 Learning Resources
+
+### Domain-Driven Design
+
+- [Domain-Driven Design by Eric Evans](https://www.domainlanguage.com/ddd/)
+- [Implementing Domain-Driven Design by Vaughn Vernon](https://kalele.io/books/)
+
+### Kotlin & Spring Boot
+
+- [Kotlin Coding Conventions](https://kotlinlang.org/docs/coding-conventions.html)
+- [Spring Boot Reference Documentation](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/)
+- [Arrow-kt Documentation](https://apidocs.arrow-kt.io/)
+
+### Testing
+
+- [Test code using JUnit in JVM - tutorial](https://kotlinlang.org/docs/jvm-test-using-junit.html)
+- [TestContainers Documentation](https://www.testcontainers.org/)
+- [REST-assured Documentation](https://rest-assured.io/)
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes following the project's coding standards
+4. Run tests and quality checks (`./gradlew check`)
+5. Commit your changes (`git commit -m 'Add amazing feature'`)
+6. Push to the branch (`git push origin feature/amazing-feature`)
+7. Open a Pull Request
+
+## 📄 License
+
+This project is part of a Domain-Driven Design course and is intended for educational purposes.
