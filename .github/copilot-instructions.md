@@ -1,59 +1,63 @@
+
 # Copilot Instructions for AI Agents
 
 ## Project Overview
 
-This is a Kotlin/Spring Boot project following Domain-Driven Design (DDD) principles for a course management domain. The
-codebase is organized by bounded contexts and layers (application, domain, infrastructure, shared).
+This repository is a Kotlin/Spring Boot project for course management, structured using Domain-Driven Design (DDD) principles. The codebase is organized by bounded contexts and layers, with a strong separation between domain logic, application use cases, infrastructure adapters, and shared utilities.
 
-## Key Architectural Patterns
+## Architecture & Structure
 
-- **DDD Structure:**
-    - `ec/solmedia/course/` contains the main domain logic for courses.
+- **DDD Layering:**
+    - `ec/solmedia/course/` — Main domain logic for courses
         - `application/`: Use cases (e.g., `CourseCreator.kt`, `CourseFinder.kt`)
-        - `domain/`: Entities, exceptions, repository interfaces
-        - `infrastructure/`: Adapters (e.g., persistence, REST)
-    - `ec/solmedia/shared/`: Cross-cutting concerns and shared utilities
+        - `domain/`: Entities, value objects, repository interfaces, custom exceptions
+        - `infrastructure/`: Adapters (persistence, REST controllers)
+    - `ec/solmedia/shared/`: Cross-cutting concerns, DI config (`DependencyInjectionConf.kt`)
 - **Testing:**
-    - Unit and integration tests are under `test/` mirroring the main structure
-    - Test data/fixtures in `test/db/fixtures/`
+    - Unit/integration tests mirror main structure under `test/`
+    - Test fixtures in `test/db/fixtures/`
+    - Test data uses the Mother pattern (e.g., `CourseMother.kt`)
 
 ## Developer Workflows
 
 - **Build:** `./gradlew build`
-- **Check (Lint, Style, Tests):** `./gradlew check`
-    - Lint: `./gradlew spotlessCheck`
+- **Lint/Style/Test:** `./gradlew check` (includes lint, style, and tests)
+    - Lint only: `./gradlew spotlessCheck`
     - Auto-fix style: `./gradlew spotlessApply`
-- **Configuration:**
-    - App configs in `application.yml` and `application-test.yml` (in both `src/main/resources` and `bin/main/`)
-    - Database migrations in `db/migration/`
+- **Run single test:** `./gradlew test --tests "ClassName.methodName"`
+- **Database migrations:** Place SQL in `src/main/resources/db/migration/`, run with `./gradlew flywayMigrate`
+- **Config:** App configs in `application.yml` and `application-test.yml` (in both `src/main/resources` and `bin/main/`)
 
 ## Project-Specific Conventions
 
-- **Kotlin + Arrow Core:** Use functional error handling and value types from Arrow where possible
-- **Repository Pattern:** Domain repositories are interfaces in `domain/`, implemented in `infrastructure/persistence/`
-- **Dependency Injection:** Managed via Spring, configured in `shared/config/DependencyInjectionConf.kt`
-- **REST API:** REST controllers/adapters live in `infrastructure/rest/`
-- **Test Patterns:** Use `Mother` objects (e.g., `CourseMother.kt`, `UuidMother.kt`) for test data creation
+- **Value Objects:** Domain entities/VOs validate on creation and throw custom exceptions (see `CourseId`, `CourseName`)
+- **Repository Pattern:** Interfaces in `domain/`, implementations in `infrastructure/persistence/`
+- **Dependency Injection:** Spring beans configured in `shared/config/DependencyInjectionConf.kt`
+- **REST API:** Controllers/adapters in `infrastructure/rest/`
+- **Exception Handling:** Custom domain exceptions, handled by `@RestControllerAdvice` (see REST layer)
+- **Testing:** Use Mother objects for test data; base test classes for integration/acceptance tests
 
-## Integration Points
+## Integration Points & External Dependencies
 
-- **Database:** Managed via migrations in `db/migration/`; test fixtures in `test/db/fixtures/`
-- **External Libraries:**
-    - [Test Containers](https://www.testcontainers.org/) for integration testing
-    - [Arrow Core](https://arrow-kt.io/docs/core/) for functional programming
+- **Database:** PostgreSQL (H2 for tests); migrations via Flyway (`db/migration/`)
+- **Testing:**
+    - [Testcontainers](https://www.testcontainers.org/) for DB integration
     - [REST-assured](https://rest-assured.io/) for REST API testing
+- **Functional Programming:** [Arrow Core](https://arrow-kt.io/docs/core/) for value types and error handling
 
-## Examples
+## Examples & Patterns
 
-- To add a new use case, create a class in `application/` and wire it in `DependencyInjectionConf.kt`
-- To add a new entity, define it in `domain/` and update the repository interface/implementation
-- To add a migration, place a new SQL file in `db/migration/`
+- **Add a use case:** Create in `application/`, wire in `DependencyInjectionConf.kt`
+- **Add an entity:** Define in `domain/`, update repository interface/implementation
+- **Add a migration:** Place SQL in `db/migration/`
+- **Test data:** Use Mother objects (e.g., `CourseMother.kt`)
 
 ## References
 
-- See `README.md` for build and test commands
-- See `shared/config/DependencyInjectionConf.kt` for DI setup
-- See `test/` for test structure and patterns
+- `README.md`: Build/test commands, project overview
+- `AGENTS.md`: Additional agent guidance
+- `shared/config/DependencyInjectionConf.kt`: DI setup
+- `test/`: Test structure and patterns
 
 ---
-For questions about project structure or conventions, review this file and the `README.md` before making changes.
+For questions about structure or conventions, review this file, `AGENTS.md`, and `README.md` before making changes.

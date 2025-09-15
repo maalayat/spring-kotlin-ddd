@@ -40,7 +40,7 @@ Each bounded context follows the same layered architecture:
 - **Framework**: Spring Boot 3.4.4
 - **Language**: Kotlin 1.9.25 with Java 21
 - **Database**: PostgreSQL with Flyway migrations
-- **Functional Programming**: [Arrow-kt](https://arrow-kt.io/docs/core/) for error handling
+- **Error Handling**: Exception-based error handling with custom domain exceptions
 - **Testing**: JUnit 5, [TestContainers](https://www.testcontainers.org/), [REST-assured](https://rest-assured.io/),
   MockK
 - **Code Quality**: [Ktlint](https://ktlint.github.io/) via [Spotless](https://github.com/diffplug/spotless)
@@ -50,7 +50,7 @@ Each bounded context follows the same layered architecture:
 ## 🔧 Key Features
 
 - **Domain Events**: Event-driven communication between bounded contexts
-- **Functional Error Handling**: Using Arrow-kt's `Raise` context for type-safe error management
+- **Exception Handling**: Custom domain exceptions with Spring's `@RestControllerAdvice`
 - **Value Objects**: Strong typing with validation for domain concepts
 - **Repository Pattern**: Clean data access abstraction
 - **Integration Testing**: Comprehensive testing with TestContainers
@@ -184,7 +184,7 @@ This project follows Kotlin coding conventions enforced by Ktlint:
 - Use meaningful names for classes, functions, and variables
 - Prefer immutable data structures
 - Leverage Kotlin's type system for domain modeling
-- Use context receivers for functional error handling
+- Use custom domain exceptions for error handling
 
 ## 🔍 Domain Model Examples
 
@@ -204,10 +204,9 @@ data class Course(
 ```kotlin
 data class CourseName private constructor(val value: String) {
     companion object {
-        context(Raise<InvalidCourseName>)
         operator fun invoke(name: String): CourseName {
-            ensure(name.isNotEmpty() && name.isNotBlank()) {
-                InvalidCourseName(name, null)
+            if (name.isEmpty() || name.isBlank()) {
+                throw InvalidCourseName(name)
             }
             return CourseName(name)
         }
@@ -226,7 +225,6 @@ data class CourseName private constructor(val value: String) {
 
 - [Kotlin Coding Conventions](https://kotlinlang.org/docs/coding-conventions.html)
 - [Spring Boot Reference Documentation](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/)
-- [Arrow-kt Documentation](https://apidocs.arrow-kt.io/)
 
 ### Testing
 

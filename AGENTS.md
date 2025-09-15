@@ -1,6 +1,6 @@
-# CLAUDE.md
+# AGENTS.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to AI agents when working with code in this repository.
 
 ## Essential Commands
 
@@ -36,14 +36,14 @@ ec.solmedia.shared/  # Cross-cutting concerns, DI configuration
 
 ### Key Patterns
 
-- **Value Objects:** Domain entities use Arrow Core's context receivers for validation (e.g., `CourseId`, `CourseName`)
+- **Value Objects:** Domain entities with validation that throws custom exceptions (e.g., `CourseId`, `CourseName`)
 - **Repository Pattern:** Interfaces in domain, implementations in infrastructure
-- **Functional Error Handling:** Arrow Core `Raise` context for type-safe error handling
+- **Exception Handling:** Custom domain exceptions handled by `@RestControllerAdvice`
 - **Dependency Injection:** Spring beans configured in `shared/config/DependencyInjectionConf.kt`
 
 ## Technology Stack
 
-- **Language:** Kotlin with Arrow Core functional programming
+- **Language:** Kotlin with exception-based error handling
 - **Framework:** Spring Boot 3.4.4
 - **Database:** PostgreSQL (H2 for tests)
 - **Testing:** JUnit 5, MockK, Testcontainers, REST-assured
@@ -66,14 +66,16 @@ ec.solmedia.shared/  # Cross-cutting concerns, DI configuration
 ## Development Workflow
 
 1. Always run `./gradlew spotlessApply` before committing
-2. Use Arrow Core's `Raise` context for error handling in domain logic
+2. Use custom domain exceptions for error handling in domain logic
 3. Add new use cases to `DependencyInjectionConf.kt`
 4. Create database migrations for schema changes
 5. Follow Mother pattern for test data creation
+6. Handle exceptions in REST layer using `@RestControllerAdvice`
 
 ## Code Conventions
 
-- Kotlin with functional programming patterns via Arrow Core
-- Context receivers for validation in value objects
+- Kotlin with exception-based error handling
+- Custom domain exceptions for validation in value objects
 - Repository pattern with domain interfaces
 - Spring dependency injection for application services
+- Exception handling with `@RestControllerAdvice` and `ProblemDetail`
