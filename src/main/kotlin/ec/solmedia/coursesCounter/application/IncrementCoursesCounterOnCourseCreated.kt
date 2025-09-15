@@ -1,7 +1,5 @@
 package ec.solmedia.coursesCounter.application
 
-import arrow.core.identity
-import arrow.core.raise.either
 import ec.solmedia.course.domain.CourseCreatedDomainEvent
 import ec.solmedia.course.domain.CourseId
 import org.slf4j.LoggerFactory
@@ -18,11 +16,6 @@ class IncrementCoursesCounterOnCourseCreated(private val coursesCounterIncrement
             event.eventName,
         )
         val aggregateId = event.aggregateId
-        val eitherCourseId = either { CourseId(aggregateId) }
-        val courseId = eitherCourseId.fold(
-            { log.error("Invalid course id={}", aggregateId); throw RuntimeException() },
-            ::identity,
-        )
-        either { coursesCounterIncrementer.increment(courseId) }
+        coursesCounterIncrementer.increment(CourseId(aggregateId))
     }
 }

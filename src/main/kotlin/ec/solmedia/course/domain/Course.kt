@@ -1,7 +1,5 @@
 package ec.solmedia.course.domain
 
-import arrow.core.raise.Raise
-import arrow.core.raise.ensure
 import ec.solmedia.shared.domain.DomainEvent
 import java.time.LocalDateTime
 import java.util.*
@@ -9,11 +7,10 @@ import java.util.*
 data class CourseId private constructor(val value: UUID) {
 
     companion object {
-        context(Raise<InvalidCourseId>)
         operator fun invoke(id: String): CourseId = try {
             CourseId(UUID.fromString(id))
         } catch (exception: IllegalArgumentException) {
-            raise(InvalidCourseId(id, exception))
+            throw InvalidCourseId(id, exception)
         }
     }
 }
@@ -21,10 +18,9 @@ data class CourseId private constructor(val value: UUID) {
 data class CourseName private constructor(val value: String) {
 
     companion object {
-        context(Raise<InvalidCourseName>)
         operator fun invoke(name: String): CourseName {
-            ensure(name.isNotEmpty() && name.isNotBlank()) {
-                InvalidCourseName(name, null)
+            if (name.isEmpty() || name.isBlank()) {
+                throw InvalidCourseName(name)
             }
 
             return CourseName(name)

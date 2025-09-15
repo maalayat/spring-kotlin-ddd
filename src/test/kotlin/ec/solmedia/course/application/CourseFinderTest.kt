@@ -1,11 +1,6 @@
 package ec.solmedia.course.application
 
-import arrow.core.Either
-import arrow.core.raise.Raise
-import arrow.core.raise.either
 import ec.solmedia.course.domain.CourNameMother
-import ec.solmedia.course.domain.CourseApplicationError
-import ec.solmedia.course.domain.CourseError
 import ec.solmedia.course.domain.CourseIdMother
 import ec.solmedia.course.domain.CourseMother
 import ec.solmedia.course.domain.CourseNotFound
@@ -16,6 +11,7 @@ import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import kotlin.test.assertEquals
 
@@ -38,21 +34,18 @@ class CourseFinderTest {
     }
 
     private fun `given a saved course`() {
-        every { courseRepository::find.invoke(any(), any()) } returns CourseMother.fixed()
+        every { courseRepository.find(any()) } returns CourseMother.fixed()
     }
 
-    private fun `when the finder is executed`(): Either<CourseApplicationError, CourseResponse> {
-        return either { courseFinder.find(CourseIdMother.id) }
-    }
+    private fun `when the finder is executed`() = courseFinder.find(CourseIdMother.id)
 
-    private fun `then the found course is equals to expected`(actualCourse: Either<CourseApplicationError, CourseResponse>) {
-        val expected = Either.Right(
-            CourseResponse(
-                id = CourseIdMother().value.toString(),
-                name = CourNameMother().value,
-                createdAt = DateMother(),
-            ),
+    private fun `then the found course is equals to expected`(actualCourse: CourseResponse) {
+        val expected = CourseResponse(
+            id = CourseIdMother().value.toString(),
+            name = CourNameMother().value,
+            createdAt = DateMother(),
         )
+
         assertEquals(expected, actualCourse)
     }
 
@@ -60,26 +53,11 @@ class CourseFinderTest {
     fun `should throw an exception when course is not found`() {
         `given a non existent course`()
 
-        val actualResult = `when the finder is executed with nonexistent course Id`()
-
-        `then the result is a failure with no found exception`(actualResult)
+        assertThrows<CourseNotFound> { `when the finder is executed`() }
     }
 
     private fun `given a non existent course`() {
-        every { courseRepository::find.invoke(any(), any()) } answers {
-            firstArg<Raise<CourseError>>().raise(CourseNotFound(nonexistentCourseId))
-        }
-    }
-
-    private fun `when the finder is executed with nonexistent course Id`(): Either<CourseApplicationError, CourseResponse> {
-        return either { courseFinder.find(otherUuid) }
-    }
-
-    private fun `then the result is a failure with no found exception`(actualResult: Either<CourseApplicationError, CourseResponse>) {
-        val expected = either {
-            raise(CourseNotFound(nonexistentCourseId))
-        }
-        assertEquals(expected, actualResult)
+        every { courseRepository.find(any()) } throws CourseNotFound(nonexistentCourseId)
     }
 
     companion object {

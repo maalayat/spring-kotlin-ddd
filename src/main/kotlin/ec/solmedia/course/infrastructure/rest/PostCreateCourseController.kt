@@ -11,11 +11,10 @@ import java.net.URI
 class PostCreateCourseController(private val courseCreator: CourseCreator) {
 
     @PostMapping("/course")
-    fun createCourse(@RequestBody request: CreateCourseRequest): ResponseEntity<String> =
-        respond {
-            courseCreator.create(request.id, request.name)
-            ResponseEntity.created(URI.create("/course/${request.id}")).build()
-        }
+    fun createCourse(@RequestBody request: CreateCourseRequest): ResponseEntity<String> {
+        courseCreator.create(request.id, request.name)
+        return ResponseEntity.created(URI.create("/course/${request.id}")).build()
+    }
 }
 
 data class CreateCourseRequest(val id: String, val name: String)

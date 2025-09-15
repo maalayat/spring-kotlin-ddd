@@ -1,15 +1,12 @@
 package ec.solmedia.course.application
 
-import arrow.core.raise.Raise
 import ec.solmedia.course.domain.Course
-import ec.solmedia.course.domain.CourseApplicationError
 import ec.solmedia.course.domain.CourseId
 import ec.solmedia.course.domain.CourseRepository
 import java.time.LocalDateTime
 
 class CourseFinder(private val courseRepository: CourseRepository) {
 
-    context(Raise<CourseApplicationError>)
     fun find(courseId: String): CourseResponse {
         val cid = CourseId(courseId)
         val course = courseRepository.find(cid)

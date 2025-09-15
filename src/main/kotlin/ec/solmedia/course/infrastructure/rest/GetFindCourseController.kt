@@ -11,8 +11,5 @@ import org.springframework.web.bind.annotation.RestController
 class GetFindCourseController(private val courseFinder: CourseFinder) {
 
     @GetMapping("course/{id}")
-    fun findCourse(@PathVariable id: String): ResponseEntity<CourseResponse> =
-        respond {
-            ResponseEntity.ok(courseFinder.find(id))
-        }
+    fun findCourse(@PathVariable id: String): ResponseEntity<CourseResponse> = ResponseEntity.ok(courseFinder.find(id))
 }

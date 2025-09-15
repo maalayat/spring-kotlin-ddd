@@ -1,14 +1,10 @@
 package ec.solmedia.course.infrastructure.persistence
 
-import arrow.core.raise.Raise
-import arrow.core.raise.catch
 import ec.solmedia.course.domain.Course
-import ec.solmedia.course.domain.CourseApplicationError
 import ec.solmedia.course.domain.CourseId
 import ec.solmedia.course.domain.CourseName
 import ec.solmedia.course.domain.CourseNotFound
 import ec.solmedia.course.domain.CourseRepository
-import ec.solmedia.course.domain.InvalidCourse
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -29,15 +25,14 @@ class PostgreSQLCourseRepository(private val jdbcTemplate: NamedParameterJdbcTem
             }
     }
 
-    context(Raise<CourseApplicationError>)
-    override fun find(id: CourseId): Course = catch({
+    override fun find(id: CourseId) = try {
         val query = "SELECT * FROM course where id=:id"
         val params = MapSqlParameterSource().addValue("id", id.value.toString())
-        jdbcTemplate.queryForObject(query, params, mapRow())
-            ?: raise(CourseNotFound(id))
-    }) { raise(CourseNotFound(id)) }
+        jdbcTemplate.queryForObject(query, params, mapRow()) ?: throw CourseNotFound(id)
+    } catch (error: Exception) {
+        throw CourseNotFound(id)
+    }
 
-    context(Raise<InvalidCourse>)
     private fun mapRow(): RowMapper<Course> {
         return RowMapper { rs: ResultSet, _: Int ->
             val id = CourseId(rs.getString("id"))

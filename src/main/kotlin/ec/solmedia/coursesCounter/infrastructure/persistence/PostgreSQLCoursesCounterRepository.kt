@@ -1,10 +1,8 @@
 package ec.solmedia.coursesCounter.infrastructure.persistence
 
-import arrow.core.raise.Raise
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import ec.solmedia.course.domain.CourseId
-import ec.solmedia.course.domain.InvalidCourse
 import ec.solmedia.coursesCounter.domain.CoursesCounter
 import ec.solmedia.coursesCounter.domain.CoursesCounterId
 import ec.solmedia.coursesCounter.domain.CoursesCounterRepository
@@ -19,14 +17,12 @@ import java.time.LocalDateTime
 class PostgreSQLCoursesCounterRepository(private val jdbcTemplate: NamedParameterJdbcTemplate) :
     CoursesCounterRepository {
 
-    context(Raise<InvalidCourse>)
     override fun search(): CoursesCounter? {
         val query = "SELECT * FROM courses_counter"
         val coursesCounter = jdbcTemplate.query(query, MapSqlParameterSource(), mapRow())
         return coursesCounter.firstOrNull()
     }
 
-    context(Raise<InvalidCourse>)
     private fun mapRow(): RowMapper<CoursesCounter> {
         return RowMapper { rs: ResultSet, _: Int ->
             val existingCoursesJson = rs.getString("existing_courses")
